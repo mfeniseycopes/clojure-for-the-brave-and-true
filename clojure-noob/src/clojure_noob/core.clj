@@ -57,6 +57,6 @@
        (recur remaining (+ acc-size (:size (first remaining))))))))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Do violence unto a poor hobbit"
   [& args]
-  (println "I'm a little teapot!"))
+  (println (hit asym-hobbit-body-parts)))
