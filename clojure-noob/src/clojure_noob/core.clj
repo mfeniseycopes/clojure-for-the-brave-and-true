@@ -60,3 +60,68 @@
   "Do violence unto a poor hobbit"
   [& args]
   (println (hit asym-hobbit-body-parts)))
+
+;; exercises
+;; 1
+(defn use-fns
+  []
+  (do
+    (str "when " 2 " become " 1)
+    (vector '(1 2 "eight"))
+    (list [1 2 3])
+    (hash-map :key1 1 :key2 2 :key1 3)
+    (hash-set 1 2 3 4 3 :val :potato)))
+
+;; 2
+(defn plus-100 [num]
+  (+ 100 num))
+
+;; 3
+(defn dec-maker
+  [dec-amnt]
+  #(- % dec-amnt))
+
+;; 4
+(defn mapset
+  [func col]
+  (reduce  
+    #(conj %1 (func %2))
+    #{} col))
+
+;; 5
+(defn radial-complementary-parts
+  [part]
+  (map 
+    #(hash-map 
+      :name (clojure.string/replace (:name part) #"^1-" (str % "-"))
+      :size (:size part) ) 
+    (range 2 6)))
+
+(defn radial-symmetrize-body-part
+  [final-parts part]
+  (into final-parts (set (cons part (radial-complementary-parts part)))))
+
+(defn radial-symmetrize-body-parts
+  [asym-body-parts]
+  (reduce radial-symmetrize-body-part [] asym-body-parts))
+
+;; 6
+(defn n-complementary-parts
+  [others matcher] 
+  (fn [part]
+    (map
+      #(hash-map 
+         :name (clojure.string/replace (:name part) matcher %)
+         :size (:size part) ) 
+      others)))
+
+(defn n-symmetrize-body-part
+  [others matcher] 
+  (fn [final-parts part]
+    (into final-parts 
+          (set (cons part ((n-complementary-parts others matcher) part))))))
+
+(defn n-symmetrize-body-parts
+  [others matcher] 
+  (fn [asym-body-parts]
+    (reduce (n-symmetrize-body-part others matcher) [] asym-body-parts)))
