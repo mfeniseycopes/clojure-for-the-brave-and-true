@@ -37,8 +37,36 @@
   [minimum-glitter records]
   (filter #(>= (:glitter-index %) minimum-glitter) records))
 
-(defn main-
+(defn -main
   [& args]
   (glitter-filter 2 (mapify (parse (slurp filename)))))
 
+;; exercises
+;; 1
+(defn glitter-filter-names
+  [minimum-glitter records]
+  (map :name (glitter-filter minimum-glitter records)))
 
+;; 2
+(defn append
+  [suspect-list new-suspect]
+  (concat suspect-list (list new-suspect)))
+
+;; 3
+(defn validate
+  [keywords record]
+  (every? #(contains? record %) keywords))
+
+(defn safe-append
+  [keywords]
+  (fn
+    [suspect-list new-suspect]
+    (if (validate keywords new-suspect)
+      (append suspect-list new-suspect)
+      suspect-list)))
+
+;; 4
+(defn suspects-to-csv
+  [suspects]
+  (clojure.string/join "\n"
+    (map #(clojure.string/join "," (vals %)) suspects)))
